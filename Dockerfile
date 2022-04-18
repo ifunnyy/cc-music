@@ -12,20 +12,17 @@ RUN apk add ca-certificates
 # 选用国内镜像源以提高下载速度
 RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.tencent.com/g' /etc/apk/repositories \
     && apk add --update --no-cache \
-    php8 \
-    php8-json \
-    php8-ctype \
-	php8-exif \
-    php8-fpm \
-    php8-session \
-    php8-pdo_mysql \
-    php8-tokenizer \
-    php8-curl \
+    php7 \
+    php7-json \
+    php7-ctype \
+	php7-exif \
+    php7-fpm \
+    php7-session \
+    php7-pdo_mysql \
+    php7-tokenizer \
+    php7-curl \
     nginx \
     && rm -f /var/cache/apk/*
-
-# 设定工作目录
-WORKDIR /app
 
 # 环境变量
 ENV MYSQL_HOST 10.0.224.5
@@ -33,16 +30,19 @@ ENV MYSQL_USERNAME music
 ENV MYSQL_PASSWORD Music677412
 ENV MYSQL_DATABASE_NAME cc-music
 
+# 设定工作目录
+WORKDIR /app
+
 # 将当前目录下所有文件拷贝到/app
 COPY . /app
 
 # 替换nginx、fpm、php配置
 RUN cp /app/conf/nginx.conf /etc/nginx/conf.d/default.conf \
-    && cp /app/conf/fpm.conf /etc/php8/php-fpm.d/www.conf \
-    && cp /app/conf/php.ini /etc/php8/php.ini \
+    && cp /app/conf/fpm.conf /etc/php7/php-fpm.d/www.conf \
+    && cp /app/conf/php.ini /etc/php7/php.ini \
     && mkdir -p /run/nginx \
     && chmod -R 777 /app/storage \
-    && mv /usr/sbin/php-fpm8 /usr/sbin/php-fpm
+    && mv /usr/sbin/php-fpm7 /usr/sbin/php-fpm
 
 # 暴露端口
 EXPOSE 80
